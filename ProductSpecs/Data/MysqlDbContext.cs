@@ -18,6 +18,12 @@ namespace ProductSpecs.Data
                          .HasColumnName("user_id")
                          .ValueGeneratedOnAdd();
             });
+            modelBuilder.Entity<Department>(entity =>
+            {
+                entity.ToTable("departments");
+                entity.HasKey(e => e.department_id);
+
+            });
         }
     }
 
