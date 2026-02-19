@@ -14,5 +14,10 @@ namespace ProductSpecs.Controllers
         {
             return Ok(await service.GetAllUsersAsync());
         }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UserResponse>> getUser(int id)
+        {
+            return Ok(await service.GetUserByIdAsync(id));
+        }
     }
 }
