@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProductSpecs.Dto.Auth;
+using ProductSpecs.Middleware;
 using ProductSpecs.Services;
 
 namespace ProductSpecs.Controllers
@@ -21,9 +22,20 @@ namespace ProductSpecs.Controllers
       //  }
 
         [HttpPost]
-        public async Task<ActionResult<bool>> LoginUser(UserLogin userLogin)
+        public async Task<ActionResult<UserResponse>> LoginUser(UserLogin userLogin)
         {
-            return Ok(await service.LoginUserAsync(userLogin));
+            LoginResponse result = await service.LoginUserAsync(userLogin);
+
+            Response.Cookies.Append(SessionAuthMiddleware.CookieName, result.SessionId, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false,
+                SameSite = SameSiteMode.Lax,
+                Expires = DateTime.UtcNow.AddHours(4),
+                Path = "/"
+            });
+            return Ok(result.User);
+           // return Ok(await service.LoginUserAsync(userLogin));
         }
     }
 }

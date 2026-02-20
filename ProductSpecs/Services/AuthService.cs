@@ -4,11 +4,12 @@ using ProductSpecs.Data.Dapper;
 using ProductSpecs.Dto.Auth;
 using ProductSpecs.Exceptions;
 using ProductSpecs.Models.Auth;
+using ProductSpecs.Util;
 using System.Text.Json;
 
 namespace ProductSpecs.Services
 {
-    public class AuthService(AuthQueries queries,LdapService ldapService)
+    public class AuthService(AuthQueries queries,LdapService ldapService, SessionQueries sessions)
     {
         public async Task<List<User>> GetAllUsersAsync()
         {
@@ -39,7 +40,7 @@ namespace ProductSpecs.Services
                 
        // }
 //
-        public async Task<bool> LoginUserAsync(UserLogin userLogin)
+        public async Task<LoginResponse> LoginUserAsync(UserLogin userLogin)
         {
             //check if username/password is empty
             if (string.IsNullOrWhiteSpace(userLogin.username) || string.IsNullOrWhiteSpace(userLogin.password))
@@ -77,8 +78,27 @@ namespace ProductSpecs.Services
                 role = userPermissionsRow[0].role
             };
 
+            var sessionId = Generators.CreateSessionId();
+            var now = DateTime.UtcNow;
 
-            return true;
+            var session = new AuthSession 
+            {
+                session_id = sessionId,
+                user_id = user.user_id,
+                username = user.username,
+                role = user.role,
+                created_utc = now,
+                last_seen_utc = now,
+                expires_utc = now.AddHours(4)
+            };
+            await sessions.CreateSessionAsync(session);
+            return new LoginResponse
+            {
+                SessionId = sessionId,
+                User = user,
+            };
+
+
             
         }
     }

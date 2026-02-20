@@ -18,7 +18,7 @@ namespace ProductSpecs.Data.Dapper
             const string sql = 
                 @"Insert into auth_sessions
                  (session_id,user_id,username,role,expires_utc,created_utc,last_seen_utc)
-                 values (@session_id,@user_id,@role,@expires_utc,@created_utc,@last_seen_utc)";
+                 values (@session_id,@user_id,@username,@role,@expires_utc,@created_utc,@last_seen_utc)";
             await using var connection = new MySqlConnection(_connectionString);
             await connection.ExecuteAsync(sql, session);
         }

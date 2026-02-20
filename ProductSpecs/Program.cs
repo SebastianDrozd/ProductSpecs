@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProductSpecs.Data;
 using ProductSpecs.Data.Dapper;
+using ProductSpecs.Middleware;
 using ProductSpecs.Services;
 using Scalar.AspNetCore;
 
@@ -40,6 +41,7 @@ namespace ProductSpecs
             }
 
             app.UseHttpsRedirection();
+            app.UseMiddleware<SessionAuthMiddleware>();
 
             app.UseAuthorization();
 
