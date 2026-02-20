@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using ProductSpecs.Data;
+using ProductSpecs.Data.Dapper;
 using ProductSpecs.Services;
 using Scalar.AspNetCore;
 
@@ -22,11 +23,11 @@ namespace ProductSpecs
             builder.Services.AddDbContext<MysqlDbContext>(options =>
                 options.UseMySql(
                                  builder.Configuration.GetConnectionString("Mysql"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("Mysql"))));
+                                ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("Mysql"))));
 
             builder.Services.AddScoped <AuthService>() ;
-
-
+            builder.Services.AddScoped<AuthQueries>();
+            builder.Services.AddScoped<LdapService>();
 
             var app = builder.Build();
 
@@ -41,6 +42,7 @@ namespace ProductSpecs
 
             app.UseAuthorization();
 
+            app.UseExceptionHandler("/error");
 
             app.MapControllers();
 
