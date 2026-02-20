@@ -28,6 +28,7 @@ namespace ProductSpecs
             builder.Services.AddScoped <AuthService>() ;
             builder.Services.AddScoped<AuthQueries>();
             builder.Services.AddScoped<LdapService>();
+            builder.Services.AddScoped<SessionQueries>();
 
             var app = builder.Build();
 

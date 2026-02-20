@@ -24,6 +24,7 @@ namespace ProductSpecs.Services
               );
                 return context.ValidateCredentials(username, password);
             }
+
             catch (PrincipalServerDownException ex) 
             {
                 throw new ServiceUnavailableException("Active Directly is unavailable");

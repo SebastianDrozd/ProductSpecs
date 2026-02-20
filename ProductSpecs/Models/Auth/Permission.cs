@@ -1,6 +1,6 @@
 ﻿namespace ProductSpecs.Models.Auth
 {
-    public class Permissison
+    public class Permission
     {
         public int permission_id { get; set; }
         public int permission_user_id { get; set; }
